@@ -50,7 +50,6 @@ Rank 2 sums the two values from 1 and 3. (OUTPUT THIS TO CONSOLE)
 (BONUS POINTS) You don't have to, however if you can, try to use groups. http://mpitutorial.com/tutorials/introduction-to-groups-and-communicators/
 
 */
-
 // Includes
 #include <iostream>
 #include <mpi.h>
@@ -78,15 +77,15 @@ void master(void) {
 
   // Send the difference of the hash input to others
   MPI_Send(hashInput, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-  std::cout << "rank 0 send message to process 1" << hashInput[0] << std::endl;
+  std::cout << "rank 0 send " << hashInput[0] << " to process 1" << std::endl;
 
   hashInput[1] = worldsWorstworldsWorstHash1(hashInput[0]) - worldsWorstworldsWorstHash2(hashInput[0]);
   MPI_Send(hashInput, 2, MPI_INT, 2, 0, MPI_COMM_WORLD);
-  std::cout << "rank 0 send message to process 2" << hashInput[1]  << std::endl;
+  std::cout << "rank 0 send " << hashInput[1] << " to process 2"  << std::endl;
 
   hashInput[2] = worldsWorstworldsWorstHash1(hashInput[1]) - worldsWorstworldsWorstHash2(hashInput[1]);
   MPI_Send(hashInput, 3, MPI_INT, 3, 0, MPI_COMM_WORLD);
-  std::cout << "rank 0 send message to process 3" << hashInput[2] << std::endl;
+  std::cout << "rank 0 send " << hashInput[2] << " to process 3" << std::endl;
 
   // printing out the last 2 hash values
   std::cout << "worldsWorstHash1(HashInput3): " << worldsWorstworldsWorstHash1(hashInput[2]) << std::endl;
@@ -99,8 +98,8 @@ void slave(const int rank) {
   int *hashInput = new int[3];
   
   // recieve a hash number from the master and print them to console
-  MPI_Recv(hashInput, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-  std::cout << "rank " << rank << " recieved Hash: " << hashInput[0] << std::endl;
+  MPI_Recv(hashInput, 3, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  std::cout << "rank " << rank << " recieved Hash: " << hashInput[rank - 1] << std::endl;
   
   // delete the memory for the array
   delete[] hashInput;
