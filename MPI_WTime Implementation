@@ -1,0 +1,69 @@
+// Includes
+#include <iostream>
+#include <mpi.h>
+
+// Prime counter function
+int primeCounter(int n){
+  int count = 0;
+  for (int a=2; a<n; a++){
+    bool isPrime = true;
+    for(int c=2; c*c <= a; c++){
+      if (a % c == 0) {
+        isPrime = false;
+  	break;
+      }
+    }
+    if(isPrime) count++;
+
+  }
+
+  return count;
+}
+
+
+// entry point into our program
+int main(int argc, char **argv){
+     // initialise MPI
+    MPI_Init(NULL, NULL);
+    
+    // variable declaration
+    int size, rank;
+    int counter1, counter2, counter3, counter4;
+    int *total = new int[4];
+
+    // get access to the size of the world and the rank we have
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    
+     if(rank == 0){
+         int counter1 = primeCounter(25^(rank + 2));
+         std::cout << "rank 0 has " << counter1 << "Prime Number(s)" << std::endl;
+     }
+     
+     // for second rank
+     if(rank == 1){
+         counter2 = primeCounter(25^(rank + 2));
+         std::cout << "rank 1 has " << counter2 << "Prime Number(s)" << std::endl;
+     }
+     
+      // for third rank
+     if(rank == 2){
+         counter3 = primeCounter(25^(rank + 2));
+         std::cout << "rank 2 has " << counter3 << "Prime Number(s)" << std::endl;
+     }
+     
+      // for fourth rank
+     if(rank == 3){
+         counter4 = primeCounter(25^(rank + 2));
+         std::cout << "rank 1 has " << counter4 << "Prime Number(s)" << std::endl;
+     }
+     
+     // finalise MPI and return control to the OS
+    MPI_Finalize();
+    // display name and student number
+    std::cout << "Name: Thohiru Omoloye " << std::endl;
+    std::cout << "Student Number: 2950574 " << std::endl;
+    return 0;
+
+
+}
